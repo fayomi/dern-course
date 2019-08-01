@@ -1,0 +1,45 @@
+service: mern-application
+
+# custom:
+#   tableName: "ideas-table"
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  region: eu-west-1
+  stage: prod
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - { "Fn::GetAtt": ["UsersDynamoDBTable", "Arn"] }
+  environment:
+    USERS_TABLE: USERS_TABLE
+
+functions:
+  app:
+    handler: server.handler
+    events:
+      - http: ANY /
+      - http: "ANY {proxy+}"
+resources:
+  Resources:
+    UsersDynamoDBTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: "USERS_TABLE"
