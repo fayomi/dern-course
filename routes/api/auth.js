@@ -77,7 +77,7 @@ router.post(
           console.log(err);
           res.status(400).json({ error: "Could not get users" });
         } else {
-          if (!data) {
+          if (!data.Items[0]) {
             return res
               .status(400)
               .json({ errors: [{ msg: "Invalid Credentials" }] });

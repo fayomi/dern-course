@@ -138,7 +138,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/mern-application/prod/1564931093970-2019-08-04T15:04:53.970Z/mern-application.zip"
+          "S3Key": "serverless/mern-application/prod/1564932529368-2019-08-04T15:28:49.368Z/mern-application.zip"
         },
         "FunctionName": "mern-application-prod-app",
         "Handler": "server.handler",
@@ -163,14 +163,14 @@
         "IamRoleLambdaExecution"
       ]
     },
-    "AppLambdaVersion4TA66FvRvohNcYLjF5yKjiXEBIcPacl2q7vX9EZg": {
+    "AppLambdaVersionpo5AH9nunQGKXd5nNOwCVrXKdCMxBV8i2XwS8o00": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "FnqMdcXvp/6wVz087/Afzt+NspVuuu+wqhD9SQk88iA="
+        "CodeSha256": "ZN/vZiu0AM9MCcsFk/ZoNbX8ZGg7VXMomPDYGdA+wy4="
       }
     },
     "ApiGatewayRestApi": {
@@ -288,7 +288,7 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1564931079702": {
+    "ApiGatewayDeployment1564932512273": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -395,7 +395,7 @@
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersion4TA66FvRvohNcYLjF5yKjiXEBIcPacl2q7vX9EZg"
+        "Ref": "AppLambdaVersionpo5AH9nunQGKXd5nNOwCVrXKdCMxBV8i2XwS8o00"
       }
     },
     "ServiceEndpoint": {
