@@ -94,6 +94,20 @@
                         "UsersDynamoDBTable",
                         "Arn"
                       ]
+                    },
+                    {
+                      "Fn::Join": [
+                        "/",
+                        [
+                          {
+                            "Fn::GetAtt": [
+                              "UsersDynamoDBTable",
+                              "Arn"
+                            ]
+                          },
+                          "index/*"
+                        ]
+                      ]
                     }
                   ]
                 }
@@ -124,7 +138,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/mern-application/prod/1564681183690-2019-08-01T17:39:43.690Z/mern-application.zip"
+          "S3Key": "serverless/mern-application/prod/1564931093970-2019-08-04T15:04:53.970Z/mern-application.zip"
         },
         "FunctionName": "mern-application-prod-app",
         "Handler": "server.handler",
@@ -139,7 +153,8 @@
         "Timeout": 6,
         "Environment": {
           "Variables": {
-            "USERS_TABLE": "USERS_TABLE"
+            "USERS_TABLE": "USERS_TABLE",
+            "USERS_INDEX": "USERS_INDEX"
           }
         }
       },
@@ -148,14 +163,14 @@
         "IamRoleLambdaExecution"
       ]
     },
-    "AppLambdaVersionSeG7exq6JYOW5CTqEYpVxSN0RgWu05m2aGBlYwR1M": {
+    "AppLambdaVersion4TA66FvRvohNcYLjF5yKjiXEBIcPacl2q7vX9EZg": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "1UXLnl2jE+HXsld8xXqln82JyHSMG5teYNZUJUtqNfo="
+        "CodeSha256": "FnqMdcXvp/6wVz087/Afzt+NspVuuu+wqhD9SQk88iA="
       }
     },
     "ApiGatewayRestApi": {
@@ -273,7 +288,7 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1564681165585": {
+    "ApiGatewayDeployment1564931079702": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -330,12 +345,37 @@
           {
             "AttributeName": "userId",
             "AttributeType": "S"
+          },
+          {
+            "AttributeName": "email",
+            "AttributeType": "S"
           }
         ],
         "KeySchema": [
           {
             "AttributeName": "userId",
             "KeyType": "HASH"
+          }
+        ],
+        "GlobalSecondaryIndexes": [
+          {
+            "IndexName": "USERS_INDEX",
+            "KeySchema": [
+              {
+                "AttributeName": "email",
+                "KeyType": "HASH"
+              }
+            ],
+            "Projection": {
+              "NonKeyAttributes": [
+                "salted_password"
+              ],
+              "ProjectionType": "INCLUDE"
+            },
+            "ProvisionedThroughput": {
+              "ReadCapacityUnits": 1,
+              "WriteCapacityUnits": 1
+            }
           }
         ],
         "ProvisionedThroughput": {
@@ -355,7 +395,7 @@
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersionSeG7exq6JYOW5CTqEYpVxSN0RgWu05m2aGBlYwR1M"
+        "Ref": "AppLambdaVersion4TA66FvRvohNcYLjF5yKjiXEBIcPacl2q7vX9EZg"
       }
     },
     "ServiceEndpoint": {

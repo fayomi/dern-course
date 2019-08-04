@@ -8,6 +8,7 @@ provider:
   runtime: nodejs10.x
   region: eu-west-1
   stage: prod
+  timeout: 6
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -19,8 +20,13 @@ provider:
         - dynamodb:DeleteItem
       Resource:
         - { "Fn::GetAtt": ["UsersDynamoDBTable", "Arn"] }
+        - Fn::Join:
+            - "/"
+            - - { "Fn::GetAtt": ["UsersDynamoDBTable", "Arn"] }
+              - "index/*"
   environment:
     USERS_TABLE: USERS_TABLE
+    USERS_INDEX: USERS_INDEX
 
 functions:
   app:
@@ -36,9 +42,23 @@ resources:
         AttributeDefinitions:
           - AttributeName: userId
             AttributeType: S
+          - AttributeName: email
+            AttributeType: S
         KeySchema:
           - AttributeName: userId
             KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: USERS_INDEX
+            KeySchema:
+              - AttributeName: email
+                KeyType: HASH
+            Projection:
+              NonKeyAttributes:
+                - salted_password
+              ProjectionType: INCLUDE
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1

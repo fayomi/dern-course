@@ -3,10 +3,13 @@ const serverless = require("serverless-http");
 const AWS = require("aws-sdk");
 const router = express.Router();
 const { check, validationResult } = require("express-validator");
+const jwt = require("jsonwebtoken");
 const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
 const uuid = require("uuid");
 const date = new Date();
+
+const config = require("config");
 
 const USERS_TABLE = process.env.USERS_TABLE;
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
@@ -67,13 +70,25 @@ router.post(
           console.log(error);
           res.status(400).json({ error: "Could not create user" });
         }
-        // res.json({ userId, name });
-        // res.redirect("/prod");
-        res.status(200).send("job done");
-      });
 
-      //Return jsonwebtoken
-      //   res.send("User Registered");
+        const payload = {
+          user: {
+            id: userId
+          }
+        };
+
+        jwt.sign(
+          payload,
+          config.get("jwtSecret"),
+          { expiresIn: 360000 },
+          (err, token) => {
+            if (err) throw err;
+            res.json({ token });
+          }
+        );
+
+        // res.status(200).send("job done");
+      });
     } catch (err) {
       console.log(err.message);
       res.status(500).send("Server error");
