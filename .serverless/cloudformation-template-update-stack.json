@@ -96,6 +96,12 @@
                       ]
                     },
                     {
+                      "Fn::GetAtt": [
+                        "ProfilesDynamoDBTable",
+                        "Arn"
+                      ]
+                    },
+                    {
                       "Fn::Join": [
                         "/",
                         [
@@ -138,11 +144,11 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/mern-application/prod/1564932529368-2019-08-04T15:28:49.368Z/mern-application.zip"
+          "S3Key": "serverless/mern-application/prod/1565033159056-2019-08-05T19:25:59.056Z/mern-application.zip"
         },
         "FunctionName": "mern-application-prod-app",
         "Handler": "server.handler",
-        "MemorySize": 1024,
+        "MemorySize": 512,
         "Role": {
           "Fn::GetAtt": [
             "IamRoleLambdaExecution",
@@ -154,7 +160,8 @@
         "Environment": {
           "Variables": {
             "USERS_TABLE": "USERS_TABLE",
-            "USERS_INDEX": "USERS_INDEX"
+            "USERS_INDEX": "USERS_INDEX",
+            "PROFILES_TABLE": "PROFILES_TABLE"
           }
         }
       },
@@ -163,14 +170,14 @@
         "IamRoleLambdaExecution"
       ]
     },
-    "AppLambdaVersionpo5AH9nunQGKXd5nNOwCVrXKdCMxBV8i2XwS8o00": {
+    "AppLambdaVersionI2YFF667tZ2vcGJ6I5oyYwZYvDMNBPP9K5mzYiuHDA": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "ZN/vZiu0AM9MCcsFk/ZoNbX8ZGg7VXMomPDYGdA+wy4="
+        "CodeSha256": "4xud2zS2+aJYhtoy7ImoFmCGJnD35WJUd7Lx9IP4L7Y="
       }
     },
     "ApiGatewayRestApi": {
@@ -288,7 +295,7 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1564932512273": {
+    "ApiGatewayDeployment1565033143319": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -384,6 +391,28 @@
         },
         "TableName": "USERS_TABLE"
       }
+    },
+    "ProfilesDynamoDBTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "userId",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "userId",
+            "KeyType": "HASH"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 1,
+          "WriteCapacityUnits": 1
+        },
+        "TableName": "PROFILES_TABLE"
+      }
     }
   },
   "Outputs": {
@@ -395,7 +424,7 @@
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersionpo5AH9nunQGKXd5nNOwCVrXKdCMxBV8i2XwS8o00"
+        "Ref": "AppLambdaVersionI2YFF667tZ2vcGJ6I5oyYwZYvDMNBPP9K5mzYiuHDA"
       }
     },
     "ServiceEndpoint": {

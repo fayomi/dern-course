@@ -9,6 +9,7 @@ provider:
   region: eu-west-1
   stage: prod
   timeout: 6
+  memorySize: 512
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -20,6 +21,7 @@ provider:
         - dynamodb:DeleteItem
       Resource:
         - { "Fn::GetAtt": ["UsersDynamoDBTable", "Arn"] }
+        - { "Fn::GetAtt": ["ProfilesDynamoDBTable", "Arn"] }
         - Fn::Join:
             - "/"
             - - { "Fn::GetAtt": ["UsersDynamoDBTable", "Arn"] }
@@ -27,6 +29,7 @@ provider:
   environment:
     USERS_TABLE: USERS_TABLE
     USERS_INDEX: USERS_INDEX
+    PROFILES_TABLE: PROFILES_TABLE
 
 functions:
   app:
@@ -63,3 +66,16 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: "USERS_TABLE"
+    ProfilesDynamoDBTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: "PROFILES_TABLE"
