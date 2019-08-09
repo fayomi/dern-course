@@ -22,7 +22,6 @@ provider:
       Resource:
         - { "Fn::GetAtt": ["UsersDynamoDBTable", "Arn"] }
         - { "Fn::GetAtt": ["ProfilesDynamoDBTable", "Arn"] }
-        - { "Fn::GetAtt": ["ExperiencesDynamoDBTable", "Arn"] }
         - Fn::Join:
             - "/"
             - - { "Fn::GetAtt": ["UsersDynamoDBTable", "Arn"] }
@@ -31,7 +30,6 @@ provider:
     USERS_TABLE: USERS_TABLE
     USERS_INDEX: USERS_INDEX
     PROFILES_TABLE: PROFILES_TABLE
-    EXPERIENCES_TABLE: EXPERIENCES_TABLE
 
 functions:
   app:
@@ -81,16 +79,3 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: "PROFILES_TABLE"
-    ExperiencesDynamoDBTable:
-      Type: "AWS::DynamoDB::Table"
-      Properties:
-        AttributeDefinitions:
-          - AttributeName: expId
-            AttributeType: S
-        KeySchema:
-          - AttributeName: expId
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        TableName: "EXPERIENCES_TABLE"

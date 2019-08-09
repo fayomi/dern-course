@@ -37,12 +37,6 @@
               ]
             },
             {
-              "Fn::GetAtt": [
-                "ExperiencesDynamoDBTable",
-                "Arn"
-              ]
-            },
-            {
               "Fn::Join": [
                 "/",
                 [
@@ -62,8 +56,7 @@
       "environment": {
         "USERS_TABLE": "USERS_TABLE",
         "USERS_INDEX": "USERS_INDEX",
-        "PROFILES_TABLE": "PROFILES_TABLE",
-        "EXPERIENCES_TABLE": "EXPERIENCES_TABLE"
+        "PROFILES_TABLE": "PROFILES_TABLE"
       },
       "versionFunctions": true,
       "remoteFunctionData": null,
@@ -177,7 +170,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/mern-application/prod/1565338967471-2019-08-09T08:22:47.471Z/mern-application.zip"
+                "S3Key": "serverless/mern-application/prod/1565360672319-2019-08-09T14:24:32.319Z/mern-application.zip"
               },
               "FunctionName": "mern-application-prod-app",
               "Handler": "server.handler",
@@ -194,8 +187,7 @@
                 "Variables": {
                   "USERS_TABLE": "USERS_TABLE",
                   "USERS_INDEX": "USERS_INDEX",
-                  "PROFILES_TABLE": "PROFILES_TABLE",
-                  "EXPERIENCES_TABLE": "EXPERIENCES_TABLE"
+                  "PROFILES_TABLE": "PROFILES_TABLE"
                 }
               }
             },
@@ -204,14 +196,14 @@
               "IamRoleLambdaExecution"
             ]
           },
-          "AppLambdaVersionGLScclRv20IegSyjYSn6ksYqDpvGGhHNmmtd1Fxaqo": {
+          "AppLambdaVersionNBF5Ke9djgCs3NrbLs7PB8jZiAGmgfzo5pObPb4YY": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "AppLambdaFunction"
               },
-              "CodeSha256": "uSTldKAa8Lcwyx3U5gxexwUTCtm+dEj/jLpnLRaXghc="
+              "CodeSha256": "7HjJwb+f5BDidPIu914ZnEmN2I+c7ZNL/WVPcYz3/z4="
             }
           },
           "ApiGatewayRestApi": {
@@ -329,7 +321,7 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayDeployment1565338952882": {
+          "ApiGatewayDeployment1565360658796": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -447,28 +439,6 @@
               },
               "TableName": "PROFILES_TABLE"
             }
-          },
-          "ExperiencesDynamoDBTable": {
-            "Type": "AWS::DynamoDB::Table",
-            "Properties": {
-              "AttributeDefinitions": [
-                {
-                  "AttributeName": "expId",
-                  "AttributeType": "S"
-                }
-              ],
-              "KeySchema": [
-                {
-                  "AttributeName": "expId",
-                  "KeyType": "HASH"
-                }
-              ],
-              "ProvisionedThroughput": {
-                "ReadCapacityUnits": 1,
-                "WriteCapacityUnits": 1
-              },
-              "TableName": "EXPERIENCES_TABLE"
-            }
           }
         },
         "Outputs": {
@@ -480,7 +450,7 @@
           "AppLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "AppLambdaVersionGLScclRv20IegSyjYSn6ksYqDpvGGhHNmmtd1Fxaqo"
+              "Ref": "AppLambdaVersionNBF5Ke9djgCs3NrbLs7PB8jZiAGmgfzo5pObPb4YY"
             }
           },
           "ServiceEndpoint": {
@@ -627,28 +597,6 @@
             },
             "TableName": "PROFILES_TABLE"
           }
-        },
-        "ExperiencesDynamoDBTable": {
-          "Type": "AWS::DynamoDB::Table",
-          "Properties": {
-            "AttributeDefinitions": [
-              {
-                "AttributeName": "expId",
-                "AttributeType": "S"
-              }
-            ],
-            "KeySchema": [
-              {
-                "AttributeName": "expId",
-                "KeyType": "HASH"
-              }
-            ],
-            "ProvisionedThroughput": {
-              "ReadCapacityUnits": 1,
-              "WriteCapacityUnits": 1
-            },
-            "TableName": "EXPERIENCES_TABLE"
-          }
         }
       },
       "Outputs": {}
@@ -658,7 +606,7 @@
     "artifact": "/Users/fayomifash/Desktop/mern-course/.serverless/mern-application.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/mern-application/prod/1565338967471-2019-08-09T08:22:47.471Z",
+    "artifactDirectoryName": "serverless/mern-application/prod/1565360672319-2019-08-09T14:24:32.319Z",
     "artifact": "mern-application.zip"
   }
 }

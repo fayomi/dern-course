@@ -352,6 +352,7 @@ router.put(
     if (to) experience.to = to;
     if (current) experience.current = current;
     if (description) experience.description = description;
+    experience.expId = uuid.v4();
 
     const updateParams = {
       TableName: PROFILES_TABLE,
@@ -411,75 +412,63 @@ router.put(
   }
 );
 
-// @route POST api/profile/experience
-// @desc Add profile Experience
+// @route DELETE api/profile/experience/:expId
+// @desc Delete Experience from profile
 // @access Private
-// router.post(
-//   "/experience",
-//   [
-//     auth,
-//     [
-//       check("title", "Title is required")
-//         .not()
-//         .isEmpty(),
-//       check("company", "Company is required")
-//         .not()
-//         .isEmpty(),
-//       check("from", "From date is required")
-//         .not()
-//         .isEmpty()
-//     ]
-//   ],
-//   async (req, res) => {
-//     const userId = req.user.id;
-//     const expId = uuid.v4();
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//       return res.status(400).json({ errors: errors.array() });
-//     }
-
-//     const {
-//       title,
-//       company,
-//       location,
-//       from,
-//       to,
-//       current,
-//       description
-//     } = req.body;
-
-//     const putParams = {
-//       TableName: EXPERIENCES_TABLE,
-//       Item: {
-//         expId,
-//         userId,
-//         title,
-//         company,
-//         location,
-//         from,
-//         to,
-//         current,
-//         description
-//       }
-//     };
-
-//     try {
-//       dynamoDb.put(putParams, error => {
-//         console.log(title);
-//         if (error) {
-//           console.log("Testing");
-//           console.log(error);
-//           res.status(400).json({ error: "Could not create profile" });
-//         }
-
-//         // res.status(200).send("new experience created");
-//         res.json(putParams.Item);
-//       });
-//     } catch (err) {
-//       console.error(err.message);
-//       res.status(500).send("Server Error");
-//     }
-//   }
-// );
+router.delete("/experience/:expId", auth, async (req, res) => {
+  const expId = req.params.expId;
+  const userId = req.user.id;
+  try {
+    console.log(expId);
+    const queryParams = {
+      TableName: PROFILES_TABLE,
+      KeyConditionExpression: "userId = :userId",
+      ExpressionAttributeValues: {
+        ":userId": userId
+      }
+    };
+    // This finds the current profile
+    dynamoDb.query(queryParams, function(err, data) {
+      if (err) {
+        console.log(err);
+        res.status(400).json({ error: "There is no profile for this user" });
+      } else {
+        // res.status(200).send(data.Items);
+        console.log("query successfule");
+        try {
+          const updateParams = {
+            TableName: PROFILES_TABLE,
+            Key: {
+              userId: userId
+            },
+            UpdateExpression: "DELETE experiences :experience",
+            // ExpressionAttributeNames: {
+            //   "#experiences": "experiences"
+            // },
+            ExpressionAttributeValues: {
+              ":experience": {
+                expId: expId
+              }
+            }
+          };
+          dynamoDb.update(updateParams, error => {
+            if (error) {
+              console.log("Testing");
+              console.log(error);
+              res.status(400).json({ error: "Could not delete experiences" });
+            }
+            res.status(200).send("experience deleted");
+          });
+        } catch (error) {
+          console.error(err.message);
+          res.status(500).send("Server Error");
+        }
+      }
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
 
 module.exports = router;
