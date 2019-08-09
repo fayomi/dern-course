@@ -308,7 +308,6 @@ router.delete("/", auth, async (req, res) => {
 // @route PUT api/profile/experience
 // @desc Add profile Experience
 // @access Private
-
 router.put(
   "/experience",
   [
@@ -343,9 +342,8 @@ router.put(
       description
     } = req.body;
 
-    // Build Profile Object
+    // Build Experience Object
     const experience = {};
-    // profileFields.userId = userId;
 
     if (title) experience.title = title;
     if (company) experience.company = company;
@@ -354,15 +352,6 @@ router.put(
     if (to) experience.to = to;
     if (current) experience.current = current;
     if (description) experience.description = description;
-    // if (skills) {
-    //   profileFields.skills = skills.split(",").map(skill => skill.trim());
-    // }
-
-    // Build Social Object
-    // profileFields.social = {};
-    // if (youtube) profileFields.social.youtube = youtube;
-    // if (instagram) profileFields.social.instagram = instagram;
-    // if (linkedin) profileFields.social.linkedin = linkedin;
 
     const updateParams = {
       TableName: PROFILES_TABLE,
@@ -414,9 +403,6 @@ router.put(
           console.error(err.message);
           res.status(500).send("Server Error");
         }
-
-        // res.status(200).send("new experience created");
-        // res.json(putParams.Item);
       });
     } catch (err) {
       console.error(err.message);
